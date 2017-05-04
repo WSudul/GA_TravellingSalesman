@@ -2,12 +2,6 @@
 
 
 
-//PathFinder::PathFinder() :
-//	GeneticAlghortim<Path>()
-//{
-//}
-
-
 PathFinder::~PathFinder()
 {
 }
