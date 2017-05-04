@@ -68,9 +68,9 @@ float PathFinder::calcFitness(Path & individual)
 	distance += preCalculatedMap.at(individual.pathPoints.back(), individual.pathPoints.front());
 
 	//#TODO check if distance ==0 ? extreme edge case but need to be considered if duplicate points are allowed
-	float fitness = 1 / distance;
-	std::cout << "fitness="<<fitness << std::endl;
-	return fitness;
+	double fitness = 1 / distance;
+	std::cout << "fitness="<<fitness <<"\t for dist="<<distance<<std::endl;
+	return (float)fitness;
 }
 
 Path PathFinder::mutateClone(const Path & individual)
@@ -118,32 +118,30 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 	const Path * prnt2Ptr = &parent2;
 	
 	auto cutStart = std::next(prnt1Ptr->pathPoints.begin(), l);
-	//auto cutEnd = std::prev(prnt1Ptr->pathPoints.end(), r);
 	auto cutEnd = std::next(prnt1Ptr->pathPoints.begin(), r);
 	
+	auto cutStart2 = std::next(prnt2Ptr->pathPoints.begin(), l);
+	auto cutEnd2 = std::next(prnt2Ptr->pathPoints.begin(), r);
+
 	std::cout << "parents:" << std::endl;
 	for (int i = 0; i < locsToVisit.size(); i++)
 		std::cout << parent1.pathPoints.at(i)<<" "<<parent2.pathPoints.at(i)<< std::endl;
 
-
-	
-	
 	std::cout << "dist(l,r)=" << std::distance(cutStart,cutEnd ) << std::endl;
 	std::cout << "dist(begin,l)" << std::distance(prnt1Ptr->pathPoints.begin(), cutStart) << std::endl;
+	
+	
 	Path child(std::vector<std::size_t>(cutStart, cutEnd)); //create  child and fill child with part of Parent
 	child.pathPoints.reserve(locsToVisit.size());
-	
 
-
-	//std::copy(cutStart, cutEnd, back_inserter(child.pathPoints)); //
 	
-	auto cutStart2 = std::next(prnt2Ptr->pathPoints.begin(), l);
-	//auto cutEnd2 = std::prev(prnt2Ptr->pathPoints.end(), r);
-	auto cutEnd2 = std::next(prnt2Ptr->pathPoints.begin(), r);
+	
 	std::cout << "child pre size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;
 	
 	
 	//following snippet will fail to account for multiple locations of the same type! Only unique locations will be valid
+
+	//loop starting from 2nd cut points to the end
 	for (auto it = cutEnd2; it != prnt2Ptr->pathPoints.end(); ++it)
 	{
 		std::cout << "prnt2 end2->end " << *it << std::endl;
@@ -154,7 +152,8 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 		}
 	}
 	
-	for (auto it = prnt2Ptr->pathPoints.begin() ; it != cutStart2; ++it)
+	//loop from start to the end (adds missing elements
+	for (auto it = prnt2Ptr->pathPoints.begin() ; it != prnt2Ptr->pathPoints.end(); ++it)
 	{
 		std::cout << "prnt2  begin->start " << *it << std::endl;
 		if (std::none_of(child.pathPoints.begin(), child.pathPoints.end(), [&it](const std::size_t & v)->bool {return *it == v; }))
@@ -167,6 +166,10 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 	//check if the size if ok
 	std::cout << "child past size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;
 
+	std::cout << "child:";
+	for(int i = 0; i < child.pathPoints.size(); i++)
+		std::cout << child.pathPoints.at(i) << " ";
+	std::cout << std::endl;
 	if (child.pathPoints.size() != locsToVisit.size())
 	{
 		std::cout << "BAD CHILD SIZE! IS:" << child.pathPoints.size() << " SHOULD BE :" << locsToVisit.size() << std::endl;
@@ -198,6 +201,9 @@ void PathFinder::initRandDevEng()
 	//Seed.RandSeedFloat.resize(minBound.floatParams.size());
 	//RandSeedBit.resize(minBound.floatParams.size());
 	setSeeds();
+
+	std::cout <<"Seed="<< Seed.RandSeedInt.front() << std::endl;
+
 }
 
 void PathFinder::initDistribution()
