@@ -123,12 +123,12 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 	auto cutStart2 = std::next(prnt2Ptr->pathPoints.begin(), l);
 	auto cutEnd2 = std::next(prnt2Ptr->pathPoints.begin(), r);
 
-	std::cout << "parents:" << std::endl;
-	for (int i = 0; i < locsToVisit.size(); i++)
-		std::cout << parent1.pathPoints.at(i)<<" "<<parent2.pathPoints.at(i)<< std::endl;
+	//std::cout << "parents:" << std::endl;
+	//for (int i = 0; i < locsToVisit.size(); i++)
+	//	std::cout << parent1.pathPoints.at(i)<<" "<<parent2.pathPoints.at(i)<< std::endl;
 
-	std::cout << "dist(l,r)=" << std::distance(cutStart,cutEnd ) << std::endl;
-	std::cout << "dist(begin,l)" << std::distance(prnt1Ptr->pathPoints.begin(), cutStart) << std::endl;
+	//std::cout << "dist(l,r)=" << std::distance(cutStart,cutEnd ) << std::endl;
+	//std::cout << "dist(begin,l)" << std::distance(prnt1Ptr->pathPoints.begin(), cutStart) << std::endl;
 	
 	
 	Path child(std::vector<std::size_t>(cutStart, cutEnd)); //create  child and fill child with part of Parent
@@ -136,7 +136,7 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 
 	
 	
-	std::cout << "child pre size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;
+	/*std::cout << "child pre size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;*/
 	
 	
 	//following snippet will fail to account for multiple locations of the same type! Only unique locations will be valid
@@ -144,10 +144,8 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 	//loop starting from 2nd cut points to the end
 	for (auto it = cutEnd2; it != prnt2Ptr->pathPoints.end(); ++it)
 	{
-		std::cout << "prnt2 end2->end " << *it << std::endl;
 		if (std::none_of(child.pathPoints.begin(), child.pathPoints.end(), [&it](const std::size_t & v)->bool {return *it == v; }))
 		{
-			std::cout << "pushing missing element\n";
 			child.pathPoints.push_back(*it);
 		}
 	}
@@ -155,21 +153,12 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 	//loop from start to the end (adds missing elements
 	for (auto it = prnt2Ptr->pathPoints.begin() ; it != prnt2Ptr->pathPoints.end(); ++it)
 	{
-		std::cout << "prnt2  begin->start " << *it << std::endl;
 		if (std::none_of(child.pathPoints.begin(), child.pathPoints.end(), [&it](const std::size_t & v)->bool {return *it == v; }))
 		{
-			std::cout << "pushing missing element\n";
 			child.pathPoints.push_back(*it);
 		}
 	}
 
-	//check if the size if ok
-	std::cout << "child past size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;
-
-	std::cout << "child:";
-	for(int i = 0; i < child.pathPoints.size(); i++)
-		std::cout << child.pathPoints.at(i) << " ";
-	std::cout << std::endl;
 	if (child.pathPoints.size() != locsToVisit.size())
 	{
 		std::cout << "BAD CHILD SIZE! IS:" << child.pathPoints.size() << " SHOULD BE :" << locsToVisit.size() << std::endl;
