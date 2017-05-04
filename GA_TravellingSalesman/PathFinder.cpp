@@ -144,7 +144,7 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 		}
 	}
 	
-	//loop from start to the end (adds missing elements
+	//loop from start to the end (adds missing elements)
 	for (auto it = prnt2Ptr->pathPoints.begin() ; it != prnt2Ptr->pathPoints.end(); ++it)
 	{
 		if (std::none_of(child.pathPoints.begin(), child.pathPoints.end(), [&it](const std::size_t & v)->bool {return *it == v; }))
@@ -172,17 +172,10 @@ void PathFinder::initRandDevEng()
 	if (Seed.RandSeedInt.size() != 0 )
 	{
 		mtInt.clear();
-		//mtFloat.clear();
-		//mtBit.clear();
 		Seed.RandSeedInt.clear();
-		//Seed.RandSeedFloat.clear();
-		//Seed.RandSeedBit.clear();
 	}
 	mtInt.resize(1);
-	//mtFloat.resize(minBound.floatParams.size());
 	Seed.RandSeedInt.resize(1);
-	//Seed.RandSeedFloat.resize(minBound.floatParams.size());
-	//RandSeedBit.resize(minBound.floatParams.size());
 	setSeeds();
 
 	std::cout <<"Seed="<< Seed.RandSeedInt.front() << std::endl;
