@@ -11,7 +11,9 @@ PathFinder::PathFinder(Matrix<int> map, std::vector<std::size_t >& places, unsig
 	preCalculatedMap(map),
 	locsToVisit(places)
 {
-	std::cout << "PathFinder ctor" << std::endl;
+	setMaxGroupSize(maxGroupSize); //#TODO move it to initializer list , default ctor for base class sets it to 10
+	initRandDevEng(); //initialize random devices (generators for algorithm) with random seeds
+
 	if (preCalculatedMap.getSize1() != preCalculatedMap.getSize2())
 	{
 		throw (std::invalid_argument("Map is not complete:" + preCalculatedMap.getSize1() + preCalculatedMap.getSize2() ) );
@@ -52,7 +54,6 @@ Path PathFinder::createIndividual()
 float PathFinder::calcFitness(Path & individual)
 {
 	double distance = 0;
-	std::cout << "calc fitness" << std::endl;
 
 	//loop through all the points and calculate distance
 	for (auto it = individual.pathPoints.begin(); it != std::prev(individual.pathPoints.end(), 1); it++)
@@ -63,7 +64,7 @@ float PathFinder::calcFitness(Path & individual)
 
 	//#TODO check if distance ==0 ? extreme edge case but need to be considered if duplicate points are allowed
 	double fitness = 1 / distance;
-	std::cout << "fitness="<<fitness <<"\t for dist="<<distance<<std::endl;
+	//std::cout << "fitness="<<fitness <<"\t for dist="<<distance<<std::endl;
 	return (float)fitness;
 }
 
@@ -130,7 +131,7 @@ Path PathFinder::crossover(const Path & parent1, const Path & parent2)
 
 	
 	
-	/*std::cout << "child pre size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;*/
+	//std::cout << "child pre size=" << child.pathPoints.size() << "\tl=" << l << " r=" << r << std::endl;
 	
 	
 	//following snippet will fail to account for multiple locations of the same type! Only unique locations will be valid
@@ -174,12 +175,13 @@ void PathFinder::initRandDevEng()
 		mtInt.clear();
 		Seed.RandSeedInt.clear();
 	}
+	
 	mtInt.resize(1);
 	Seed.RandSeedInt.resize(1);
 	setSeeds();
-
-	std::cout <<"Seed="<< Seed.RandSeedInt.front() << std::endl;
-
+	seedGenerators();
+	
+	
 }
 
 void PathFinder::initDistribution()
