@@ -515,15 +515,13 @@ inline void GeneticAlghortim<T>::addSpecimen(std::vector<Specimen> &Group,T &ind
 
 	if (Group.size() < maxGroupSize)
 	{
-		//std::cout << "pushing Specimen\t"<<fitness<<"\n";
+		std::cout << "pushing Specimen\t"<<fitness<<"\n";
 		Group.push_back(Specimen(individual, fitness));
 
 	}
 	else
-	{
 		std::cout << "Unable to push specimen!\n";
-		throw std::exception("Unable to add new specimen");
-	}
+
 
 
 }
@@ -535,7 +533,7 @@ inline void GeneticAlghortim<T>::removeUnfitSpecimens(std::vector<Specimen> &Gro
 	double avg = average(Group);
 	std::vector<Specimen>::iterator it = Group.begin();
 
-	//std::cout << "\taverage=" << avg << std::endl;
+	std::cout << "\taverage=" << avg << std::endl;
 	sortGroup(Group);
 
 	//loop until you find individual with fitness<average
@@ -544,7 +542,7 @@ inline void GeneticAlghortim<T>::removeUnfitSpecimens(std::vector<Specimen> &Gro
 	if(it != Group.end())
 	{
 		//erase part of Group in SORTED vector
-		//std::cout <<"REMOVING UNFIT SPECIMENS:"<< std::distance(it, Group.end()) << std::endl;
+		std::cout <<"REMOVING UNFIT SPECIMENS:"<< std::distance(it, Group.end()) << std::endl;
 		Group.erase(it, Group.end());
 		
 	}
@@ -648,7 +646,7 @@ inline T GeneticAlghortim<T>::findSolution(const unsigned int goal, unsigned int
 			}
 		}
 
-		//std::cout << "getMaxGroupSize=" << getMaxGroupSize() << std::endl;
+		std::cout << "getMaxGroupSize=" << getMaxGroupSize() << std::endl;
 		if (DefGroup.size() == getMaxGroupSize())
 		{
 			//block for extracting elites or removing unfit 
@@ -661,10 +659,10 @@ inline T GeneticAlghortim<T>::findSolution(const unsigned int goal, unsigned int
 					eliteSize = 1;
 
 				newDefGroup.assign(DefGroup.begin(), DefGroup.begin() + eliteSize);
-				//std::cout << "newPop! elite=" << eliteSize;
-				//std::cout << std::endl;
+				std::cout << "newPop! elite=" << eliteSize;
+				std::cout << std::endl;
 
-				//std::cout << "average fit: " << average(newDefGroup) << std::endl;
+				std::cout << "average fit: " << average(newDefGroup) << std::endl;
 				getFittest(newDefGroup);
 			}
 			else
@@ -684,7 +682,7 @@ inline T GeneticAlghortim<T>::findSolution(const unsigned int goal, unsigned int
 				float temp_fitness = calcFitness(offspring);
 				addSpecimen(newDefGroup, offspring, temp_fitness);
 
-				//std::cout << "adding new offspring fit=" << temp_fitness << std::endl;
+				std::cout << "adding new offspring fit=" << temp_fitness << std::endl;
 			};
 
 			//DefGroup = newDefGroup; //#TODO bad idea , 2 vectors?
@@ -694,7 +692,7 @@ inline T GeneticAlghortim<T>::findSolution(const unsigned int goal, unsigned int
 				T mutant = mutateClone(it->getIndividual());
 
 				(*it) = Specimen(mutant, calcFitness(mutant));
-	
+				std::cout << "mutate" << std::endl;
 
 			}
 
@@ -715,7 +713,7 @@ inline T GeneticAlghortim<T>::findSolution(const unsigned int goal, unsigned int
 				float temp_fitness = calcFitness(offspring);
 				addSpecimen(DefGroup, offspring, temp_fitness);
 
-				//std::cout << "adding new offspring fit=" << temp_fitness << std::endl;
+				std::cout << "adding new offspring fit=" << temp_fitness << std::endl;
 			};
 
 		}
